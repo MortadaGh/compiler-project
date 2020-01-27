@@ -7,7 +7,7 @@
 
 alpha [a-zA-Z]
 digit [0-9]
-number digit+
+number {digit}+
 id {alpha}({alpha}|{digit})*
 
 %%

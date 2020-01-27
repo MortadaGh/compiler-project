@@ -12,6 +12,7 @@ FILE * f1;
 %token WHILE FOR
 %token IF ELSE
 %token NUM ID
+
 %right ASGN
 %left LOR
 %left LAND
@@ -22,7 +23,9 @@ FILE * f1;
 
 %nonassoc IFX IFX1
 %nonassoc ELSE
-  
+
+%start pgmstart
+
 %%
 
 pgmstart 	: TYPE ID '(' ')' STMTS
@@ -58,7 +61,7 @@ EXP 	: EXP LT EXP
 		| EXP LAND EXP
 		| '(' EXP ')'
 		| ID
-		| NUM 
+		| NUM {printf("NUM ");} 
 		;
 
 STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT 
@@ -81,13 +84,13 @@ WHILE_BODY		: STMTS
 
 STMT_FOR : ; //TODO
 
-STMT_DECLARE 	: TYPE ID IDS {printf("bye\n");}
+STMT_DECLARE 	: TYPE ID IDS {printf("Type : "); printf("%s\n",$1);}
 				;
 
 
-IDS 	: ';'
+IDS 	: ';' {printf("5i5i5i\n");}
 		| ','  ID IDS {printf("hi\n");}
-        | ASGN EXP IDS
+        | ASGN {printf("ASGN ");} EXP {printf("EXP ");} IDS {printf("========\n");}
 		;
 
 
@@ -103,8 +106,7 @@ TYPE	: INT
 %%
 
 int main(){
-     while(yyparse()); 
-    return 0;
+     yyparse();
 }
 
 yyerror(char* s){
