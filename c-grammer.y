@@ -6,12 +6,14 @@
 extern FILE *fp;
 FILE * f1;
 
+char** ids = (char**) malloc (50*sizeof(char*));
+
 %}
 
-%token INT FLOAT CHAR VOID
-%token WHILE FOR
-%token IF ELSE
-%token NUM ID
+%token <String> INT FLOAT CHAR VOID
+%token <String> WHILE FOR
+%token <String> IF ELSE
+%token <String> NUM ID
 
 %right ASGN
 %left LOR
@@ -23,6 +25,14 @@ FILE * f1;
 
 %nonassoc IFX IFX1
 %nonassoc ELSE
+
+%union {
+	char *String;
+}
+
+%type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE 
+%type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
+%type <String> WHILE_BODY
 
 %start pgmstart
 
@@ -84,13 +94,13 @@ WHILE_BODY		: STMTS
 
 STMT_FOR : ; //TODO
 
-STMT_DECLARE 	: TYPE ID IDS {printf("Type : "); printf("%s\n",$1);}
+STMT_DECLARE 	: TYPE ID IDS {printf("Dim %s%s as %s\n",$2,$3,$1);}
 				;
 
 
-IDS 	: ';' {printf("5i5i5i\n");}
-		| ','  ID IDS {printf("hi\n");}
-        | ASGN {printf("ASGN ");} EXP {printf("EXP ");} IDS {printf("========\n");}
+IDS 	: ';'			{$$ = "";}
+		| ','  ID IDS 	{char s[200]; strcpy(s," , "); strcat(s,$2); free($2);  strcpy($$,s);}
+        | ASGN EXP IDS
 		;
 
 
@@ -98,9 +108,9 @@ STMT_ASSGN	: ID ASGN EXP ';'
 			;
 
 
-TYPE	: INT
-        | FLOAT {$$ = "Single";     printf("%s\n",$$);}
-        | CHAR  {$$ = "Char";       printf("%s\n",$$);}
+TYPE	: INT	{$$ = "Integer";}
+        | FLOAT {$$ = "Single";}
+        | CHAR  {$$ = "Char";}
 		;
 
 %%
