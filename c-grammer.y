@@ -6,14 +6,13 @@
 extern FILE *fp;
 FILE * f1;
 
-char** ids = (char**) malloc (50*sizeof(char*));
 
 %}
 
 %token <String> INT FLOAT CHAR VOID
 %token <String> WHILE FOR
 %token <String> IF ELSE
-%token <String> NUM ID
+%token <String> NUM ID TEXT
 
 %right ASGN
 %left LOR
@@ -30,7 +29,7 @@ char** ids = (char**) malloc (50*sizeof(char*));
 	char *String;
 }
 
-%type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE 
+%type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE ID_INIT
 %type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
 %type <String> WHILE_BODY
 
@@ -71,7 +70,8 @@ EXP 	: EXP LT EXP
 		| EXP LAND EXP
 		| '(' EXP ')'
 		| ID
-		| NUM {printf("NUM ");} 
+		| NUM
+		| TEXT
 		;
 
 STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT 
@@ -94,19 +94,25 @@ WHILE_BODY		: STMTS
 
 STMT_FOR : ; //TODO
 
-STMT_DECLARE 	: TYPE ID IDS {printf("Dim %s%s as %s\n",$2,$3,$1);}
+
+
+
+STMT_DECLARE 	: TYPE IDS ';' {printf("Dim %s as %s\n",$2,$1);}
 				;
 
-
-IDS 	: ';'			{$$ = "";}
-		| ','  ID IDS 	{char s[200]; strcpy(s," , "); strcat(s,$2); free($2);  strcpy($$,s);}
-        | ASGN EXP IDS
+IDS 	: ID_INIT			{sprintf($$,"%s",$1);}
+		| IDS ',' ID_INIT	{sprintf($$,"%s,%s",$1,$3);}
 		;
 
-
-STMT_ASSGN	: ID ASGN EXP ';'
+ID_INIT		:	ID				{sprintf($$,"%s",$1);}
+			| 	ID ASGN EXP  	{sprintf($$,"%s=%s",$1,$3);}
 			;
 
+
+
+
+STMT_ASSGN	: ID ASGN EXP ';'	{/*strcat($$,$1); strcat($$,$2); strcat($$,$3);*/ printf("%s = %s\n",$1,$3);}
+			;
 
 TYPE	: INT	{$$ = "Integer";}
         | FLOAT {$$ = "Single";}

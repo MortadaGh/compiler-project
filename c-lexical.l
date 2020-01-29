@@ -7,6 +7,7 @@
 
 alpha [a-zA-Z] 
 digit [0-9]
+text "\""[a-zA-Z0-9]*"\""
 number {digit}+
 id {alpha}({alpha}|{digit})*
 
@@ -22,6 +23,7 @@ id {alpha}({alpha}|{digit})*
 "else"	            return ELSE;
 {number}            {yylval.String = strdup(yytext); return NUM;}
 {id}                {yylval.String = strdup(yytext); return ID;}
+{text}              {yylval.String = strdup(yytext); return TEXT;}
 "="                 return ASGN;
 "<="                return LE;
 ">="                return GE;
