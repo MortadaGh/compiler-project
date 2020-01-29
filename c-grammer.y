@@ -6,7 +6,7 @@
 extern FILE *fp;
 FILE * f1;
 
-
+char *type;
 %}
 
 %token <String> INT FLOAT CHAR VOID
@@ -97,15 +97,15 @@ STMT_FOR : ; //TODO
 
 
 
-STMT_DECLARE 	: TYPE IDS ';' {printf("Dim %s as %s\n",$2,$1);}
+STMT_DECLARE 	: TYPE {type = strdup($1);} IDS ';' {printf("Dim %s\n",$3);}
 				;
 
 IDS 	: ID_INIT			{sprintf($$,"%s",$1);}
-		| IDS ',' ID_INIT	{sprintf($$,"%s,%s",$1,$3);}
+		| IDS ',' ID_INIT	{sprintf($$,"%s, %s",$1,$3);}
 		;
 
-ID_INIT		:	ID				{sprintf($$,"%s",$1);}
-			| 	ID ASGN EXP  	{sprintf($$,"%s=%s",$1,$3);}
+ID_INIT		:	ID				{sprintf($$,"%s as %s",$1,type);}
+			| 	ID ASGN EXP  	{sprintf($$,"%s as %s = %s",$1,type,$3);}
 			;
 
 
