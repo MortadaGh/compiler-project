@@ -6,12 +6,14 @@
 extern FILE *fp;
 FILE * f1;
 
+char *type;
 %}
 
-%token INT FLOAT CHAR VOID
-%token WHILE FOR
-%token IF ELSE
-%token NUM ID
+%token <String> INT FLOAT CHAR VOID
+%token <String> WHILE FOR
+%token <String> IF ELSE
+%token <String> NUM ID TEXT
+
 %right ASGN
 %left LOR
 %left LAND
@@ -22,7 +24,17 @@ FILE * f1;
 
 %nonassoc IFX IFX1
 %nonassoc ELSE
-  
+
+%union {
+	char *String;
+}
+
+%type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE ID_INIT
+%type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
+%type <String> WHILE_BODY
+
+%start pgmstart
+
 %%
 
 pgmstart 	: TYPE ID '(' ')' STMTS
@@ -58,7 +70,8 @@ EXP 	: EXP LT EXP
 		| EXP LAND EXP
 		| '(' EXP ')'
 		| ID
-		| NUM 
+		| NUM
+		| TEXT
 		;
 
 STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT 
@@ -81,30 +94,35 @@ WHILE_BODY		: STMTS
 
 STMT_FOR : ; //TODO
 
-STMT_DECLARE 	: TYPE ID IDS {printf("bye\n");}
+
+
+
+STMT_DECLARE 	: TYPE {type = strdup($1);} IDS ';' {printf("Dim %s\n",$3);}
 				;
 
-
-IDS 	: ';'
-		| ','  ID IDS {printf("hi\n");}
-        | ASGN EXP IDS
+IDS 	: ID_INIT			{sprintf($$,"%s",$1);}
+		| IDS ',' ID_INIT	{sprintf($$,"%s, %s",$1,$3);}
 		;
 
-
-STMT_ASSGN	: ID ASGN EXP ';'
+ID_INIT		:	ID				{sprintf($$,"%s as %s",$1,type);}
+			| 	ID ASGN EXP  	{sprintf($$,"%s as %s = %s",$1,type,$3);}
 			;
 
 
-TYPE	: INT
-        | FLOAT {$$ = "Single";     printf("%s\n",$$);}
-        | CHAR  {$$ = "Char";       printf("%s\n",$$);}
+
+
+STMT_ASSGN	: ID ASGN EXP ';'	{/*strcat($$,$1); strcat($$,$2); strcat($$,$3);*/ printf("%s = %s\n",$1,$3);}
+			;
+
+TYPE	: INT	{$$ = "Integer";}
+        | FLOAT {$$ = "Single";}
+        | CHAR  {$$ = "Char";}
 		;
 
 %%
 
 int main(){
-     while(yyparse()); 
-    return 0;
+     yyparse();
 }
 
 yyerror(char* s){

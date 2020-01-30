@@ -1,13 +1,14 @@
 %option noyywrap
 %{
     #include <stdio.h>
+    #include <string.h>
     #include "y.tab.h"
-    extern int yylval;
 %}
 
-alpha [a-zA-Z]
+alpha [a-zA-Z] 
 digit [0-9]
-number digit+
+text "\""[a-zA-Z0-9]*"\""
+number {digit}+
 id {alpha}({alpha}|{digit})*
 
 %%
@@ -20,8 +21,9 @@ id {alpha}({alpha}|{digit})*
 "while"             return WHILE;
 "if"	            return IF;
 "else"	            return ELSE;
-{number}            return NUM;
-{id}                return ID;
+{number}            {yylval.String = strdup(yytext); return NUM;}
+{id}                {yylval.String = strdup(yytext); return ID;}
+{text}              {yylval.String = strdup(yytext); return TEXT;}
 "="                 return ASGN;
 "<="                return LE;
 ">="                return GE;
