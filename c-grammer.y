@@ -29,7 +29,7 @@ char *type;
 	char *String;
 }
 
-%type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE ID_INIT
+%type <String> pgmstart STMTS STMT TYPE IDS STMT_DECLARE ID_INIT
 %type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
 %type <String> WHILE_BODY
 
@@ -37,15 +37,11 @@ char *type;
 
 %%
 
-pgmstart 	: TYPE ID '(' ')' STMTS
+pgmstart 	: TYPE ID '(' ')' '{' STMTS '}'
 			;
 
-STMTS 	: '{' STMT1 '}'
-		|
-		;
-
-STMT1	: STMT  STMT1
-		|
+STMTS 	: STMTS STMT
+		| STMT
 		;
 
 STMT 	: STMT_DECLARE    //all types of statements
@@ -77,22 +73,24 @@ EXP 	: EXP LT EXP
 STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT 
 		;
 
-IF_BODY : STMTS
+IF_BODY : '{' STMTS '}'
 		| STMT
 		;
 
-ELSESTMT	: ELSE STMTS
-			| 
+ELSESTMT	: ELSE '{' STMTS '}'
+			| ELSE STMT
 			;
 
 STMT_WHILE		: WHILE '(' EXP ')' WHILE_BODY  
 				;
 
-WHILE_BODY		: STMTS
+WHILE_BODY		: '{' STMTS '}'
 				| STMT
 				;
 
-STMT_FOR : ; //TODO
+STMT_FOR 	: FOR '(' EXP ';' EXP ';' EXP ')' '{' STMTS '}'
+			| FOR '(' EXP ';' EXP ';' EXP ')' STMT
+			;
 
 
 
