@@ -7,20 +7,22 @@ extern FILE *fp;
 FILE * f1;
 
 char *type;
+char s[1000000];
 %}
 
 %token <String> INT FLOAT CHAR VOID
 %token <String> WHILE FOR
 %token <String> IF ELSE
-%token <String> NUM ID TEXT
+%token <String> NUM ID TEXT CHARACTERE
+%token <String> LEFTBRACKET RIGHTBRACKET SEMICOLON LEFTPARENTHESIS RIGHTPARENTHESIS
 
 %right ASGN
 %left LOR
 %left LAND
 %left EQ NE
 %left LE GE LT GT
-%left '+' '-'
-%left '*' '/'
+%left PLUS MINUS
+%left MUL DIV MOD
 
 %nonassoc IFX IFX1
 %nonassoc ELSE
@@ -32,57 +34,66 @@ char *type;
 %type <String> pgmstart STMTS STMT1 STMT TYPE IDS STMT_DECLARE ID_INIT
 %type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
 %type <String> WHILE_BODY
+%type <String> LT LE GT GE NE EQ LOR LAND PLUS MINUS MUL DIV ASGN MOD
 
 %start pgmstart
 
 %%
 
-pgmstart 	: TYPE ID '(' ')' STMTS
+pgmstart 	: TYPE ID LEFTPARENTHESIS RIGHTPARENTHESIS STMTS {printf("%s",$5);}
 			;
 
-STMTS 	: '{' STMT1 '}'
-		|
+STMTS 	: LEFTBRACKET STMT1 RIGHTBRACKET {sprintf(s,"{\n%s\n}\n",$2); $$ = strdup(s);}
+		| /*epsilon*/
 		;
 
-STMT1	: STMT  STMT1
-		|
+STMT1	: STMT {sprintf(s,"%s",$1); $$ = strdup(s);}
+		| STMT1 STMT {sprintf(s,"%s\n%s",$1,$2); $$ = strdup(s);}
 		;
 
-STMT 	: STMT_DECLARE    //all types of statements
-		| STMT_ASSGN  
-		| STMT_IF
-		| STMT_WHILE
-        | STMT_FOR
-		| ';'
+STMT 	: STMT_DECLARE  {sprintf(s,"%s",$1); $$ = strdup(s);}  //all types of statements
+		| STMT_ASSGN 	{sprintf(s,"%s",$1); $$ = strdup(s);}
+		| STMT_IF		{sprintf(s,"%s",$1); $$ = strdup(s);}
+		| STMT_WHILE	{sprintf(s,"%s",$1); $$ = strdup(s);}
+        | STMT_FOR		{sprintf(s,"%s",$1); $$ = strdup(s);}
+		| SEMICOLON
 		;		
 
-EXP 	: EXP LT EXP
-		| EXP LE EXP
-		| EXP GT EXP
-		| EXP GE EXP
-		| EXP NE EXP
-		| EXP EQ EXP
-		| EXP '+' EXP
-		| EXP '-' EXP
-		| EXP '*' EXP
-		| EXP '/' EXP
-		| EXP LOR EXP
-		| EXP LAND EXP
-		| '(' EXP ')'
+EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP LE EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP GT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP GE EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP NE EXP			{sprintf(s,"%s <> %s",$1,$3); $$ = strdup(s);}
+		| EXP EQ EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP LOR EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP LAND EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP PLUS EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP MINUS EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP MUL EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP DIV EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
+		| EXP MOD EXP			{sprintf(s,"%s Mod %s",$1,$3); $$ = strdup(s);}
+		| EXP PLUS PLUS 		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
+		| EXP MINUS MINUS		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
+		| EXP PLUS ASGN EXP		{sprintf(s,"%s %s%s %s",$1,$2,$3,$4); $$ = strdup(s);}
+		| EXP MINUS ASGN EXP	{sprintf(s,"%s %s%s %s",$1,$2,$3,$4); $$ = strdup(s);}
+		| EXP MUL ASGN EXP		{sprintf(s,"%s %s%s %s",$1,$2,$3,$4); $$ = strdup(s);}
+		| EXP DIV ASGN EXP		{sprintf(s,"%s %s%s %s",$1,$2,$3,$4); $$ = strdup(s);}
+		| '(' EXP ')'			{sprintf(s,"( %s )",$2); $$ = strdup(s);}
 		| ID
 		| NUM
 		| TEXT
+		| CHARACTERE
 		;
 
-STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT 
+STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT {printf("%s %s Then\n %s \nEnd If",$1,$3,$5);}
 		;
 
 IF_BODY : STMTS
-		| STMT
+		| STMT {sprintf($$,"%s",$1);}
 		;
 
 ELSESTMT	: ELSE STMTS
-			| 
+			| /*epsilon*/
 			;
 
 STMT_WHILE		: WHILE '(' EXP ')' WHILE_BODY  
@@ -97,7 +108,7 @@ STMT_FOR : ; //TODO
 
 
 
-STMT_DECLARE 	: TYPE {type = strdup($1);} IDS ';' {printf("Dim %s\n",$3);}
+STMT_DECLARE 	: TYPE {type = strdup($1);} IDS SEMICOLON {sprintf(s, "Dim %s",$3);$$ = strdup(s);}
 				;
 
 IDS 	: ID_INIT			{sprintf($$,"%s",$1);}
@@ -111,12 +122,13 @@ ID_INIT		:	ID				{sprintf($$,"%s as %s",$1,type);}
 
 
 
-STMT_ASSGN	: ID ASGN EXP ';'	{/*strcat($$,$1); strcat($$,$2); strcat($$,$3);*/ printf("%s = %s\n",$1,$3);}
+STMT_ASSGN	: ID ASGN EXP SEMICOLON	{sprintf(s,"%s = %s",$1,$3); $$ = strdup(s);}
+			| 
 			;
 
-TYPE	: INT	{$$ = "Integer";}
-        | FLOAT {$$ = "Single";}
-        | CHAR  {$$ = "Char";}
+TYPE	: INT	{$$ = strdup("Integer");}
+        | FLOAT {$$ = strdup("Single");}
+        | CHAR  {$$ = strdup("Char");}
 		;
 
 %%
