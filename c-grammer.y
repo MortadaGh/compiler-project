@@ -76,11 +76,8 @@ EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| EXP MOD EXP			{sprintf(s,"%s Mod %s",$1,$3); $$ = strdup(s);}
 		| ID PLUS PLUS 			{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
 		| ID MINUS MINUS		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
-		| ID PLUS ASGN EXP		{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
-		| ID MINUS ASGN EXP	{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
-		| ID MUL ASGN EXP		{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
-		| ID DIV ASGN EXP		{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
 		| LEFTPARENTHESIS EXP RIGHTPARENTHESIS		{sprintf(s,"( %s )",$2); $$ = strdup(s);}
+		| '!' EXP				{sprintf(s,"Not %s",$2); $$ = strdup(s);}
 		| ID
 		| NUM
 		| TEXT
@@ -162,7 +159,6 @@ STMT_ASSGN	: ID ASGN EXP SEMICOLON			{sprintf(s,"%s = %s",$1,$3); $$ = strdup(s)
 			| ID MINUS ASGN EXP	SEMICOLON	{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
 			| ID MUL ASGN EXP SEMICOLON		{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
 			| ID DIV ASGN EXP SEMICOLON		{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
-		
 			;
 
 TYPE	: INT	{$$ = strdup("Integer");}

@@ -5,12 +5,12 @@
     #include "y.tab.h"
 %}
 
-alpha [a-zA-Z] 
-digit [0-9]
-text "\""([^\n\"\\]*(\\)*)*"\""  
-charactere '[a-zA-Z0-9 ]'
-number [-]?{digit}+
-id {alpha}({alpha}|{digit})*
+alpha       [a-zA-Z_] 
+digit       [0-9]
+text        "\""([^\n\"\\]*(\\)*)*"\""  
+charactere  '([^'\\\n]|\\.)'
+number      -?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
+id          {alpha}({alpha}|{digit})*
 
 %%
 
