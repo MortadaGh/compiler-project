@@ -43,7 +43,7 @@ char s[1000000];
 pgmstart 	: TYPE ID LEFTPARENTHESIS RIGHTPARENTHESIS STMTS {printf("%s",$5);}
 			;
 
-STMTS 	: LEFTBRACKET STMT1 RIGHTBRACKET {sprintf(s,"{\n%s\n}\n",$2); $$ = strdup(s);}
+STMTS 	: LEFTBRACKET STMT1 RIGHTBRACKET {sprintf(s,"%s",$2); $$ = strdup(s);}
 		| /*epsilon*/
 		;
 
@@ -85,22 +85,22 @@ EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| CHARACTERE
 		;
 
-STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT {sprintf(s,"%s %s Then\n %s \nEnd If",$1,$3,$5); $$ = strdup(s);}
+STMT_IF : IF LEFTPARENTHESIS EXP RIGHTPARENTHESIS IF_BODY ELSESTMT {sprintf(s,"If %s Then\n%s%sEnd If",$3,$5,$6); $$ = strdup(s);}
 		;
 
 IF_BODY : STMTS		{sprintf(s,"%s",$1); $$ = strdup(s);}
 		| STMT 		{sprintf(s,"%s",$1); $$ = strdup(s);}
 		;
 
-ELSESTMT	: ELSE STMTS	{sprintf(s,"\nElse %s",$2); $$ = strdup(s);}
-			| /*epsilon*/
+ELSESTMT	: ELSE STMTS	{sprintf(s,"\nElse\n%s\n",$2); $$ = strdup(s);}
+			| /*epsilon*/	{sprintf(s,"\n"); $$ = strdup(s);}
 			;
 
-STMT_WHILE		: WHILE '(' EXP ')' WHILE_BODY  
+STMT_WHILE		: WHILE LEFTPARENTHESIS EXP RIGHTPARENTHESIS WHILE_BODY  {sprintf(s,"While %s Then\n%s\nEnd While",$3,$5); $$ = strdup(s);}
 				;
 
-WHILE_BODY		: '{' STMTS '}'
-				| STMT
+WHILE_BODY		: STMTS	{sprintf(s,"%s",$1); $$ = strdup(s);}
+				| STMT	{sprintf(s,"%s",$1); $$ = strdup(s);}
 				;
 
 STMT_FOR 	: FOR '(' EXP ';' EXP ';' EXP ')' '{' STMTS '}'
