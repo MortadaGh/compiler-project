@@ -7,8 +7,8 @@
 
 alpha [a-zA-Z] 
 digit [0-9]
-text "\""[a-zA-Z0-9]*"\""
-charactere "\'"[a-zA-Z0-9]"\'"
+text "\""[%a-zA-Z0-9 ]*"\""
+charactere '[a-zA-Z0-9 ]'
 number {digit}+
 id {alpha}({alpha}|{digit})*
 
@@ -22,6 +22,8 @@ id {alpha}({alpha}|{digit})*
 "while"             return WHILE;
 "if"	            return IF;
 "else"	            return ELSE;
+"printf"            return PRINTF;
+"scanf"             return SCANF;
 {number}            {yylval.String = strdup(yytext); return NUM;}
 {id}                {yylval.String = strdup(yytext); return ID;}
 {text}              {yylval.String = strdup(yytext); return TEXT;}
