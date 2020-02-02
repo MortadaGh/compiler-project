@@ -1,0 +1,53 @@
+int main() {
+
+for(i=0;i<20;i++){
+    int a;
+}
+for(i=0;i<=20;i++){
+    int b;
+}
+for(i=20;i>0;i--) {
+    int c;
+}
+for(i=20;i>=0;i--){
+    int d;
+}
+for(i=0;i<20;i+=2){
+    int e;
+}
+for(i=0;i<=20;i+=2){
+    int f;
+}
+for(i=20;i>0;i-=2){
+    int g;
+}
+for(i=20;i>=0;i-=2){
+    int h;
+}
+for(i=0;i<=20;i--){
+    int i;
+}
+for(i=0;i<20;i--){
+    int j;
+}
+for(i=0;i<20;i-=2){
+    int k;
+}
+for(i=0;i<=20;i-=2){
+    int l;
+}
+for(i=0;i>20;i+=2){
+    int m;
+}
+for(i=0;i>=20;i+=2){
+    int n;
+}
+for(i=0;i>20;i++){
+    int e;
+}
+for(i=0;i>=20;i++){
+    int p;
+}
+
+
+}

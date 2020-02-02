@@ -3,4 +3,6 @@
 !/c-grammer.l
 !/run.bat
 !/program.bat
+!/forTest.txt
+!/forActionsExemples.txt
 !/.gitignore

@@ -7,9 +7,9 @@
 
 alpha [a-zA-Z] 
 digit [0-9]
-text "\""[%a-zA-Z0-9 ]*"\""
+text "\""([^\n\"\\]*(\\)*)*"\""  
 charactere '[a-zA-Z0-9 ]'
-number {digit}+
+number [-]?{digit}+
 id {alpha}({alpha}|{digit})*
 
 %%
