@@ -31,7 +31,7 @@ char s[1000000];
 	char *String;
 }
 
-%type <String> pgmstart STMTS STMT TYPE IDS STMT_DECLARE ID_INIT
+%type <String> pgmstart STMTS STMT STMT1 TYPE IDS STMT_DECLARE ID_INIT
 %type <String> STMT_ASSGN STMT_IF STMT_WHILE STMT_FOR EXP IF_BODY ELSESTMT
 %type <String> WHILE_BODY
 %type <String> LT LE GT GE NE EQ LOR LAND PLUS MINUS MUL DIV ASGN MOD
@@ -47,8 +47,8 @@ STMTS 	: LEFTBRACKET STMT1 RIGHTBRACKET {sprintf(s,"{\n%s\n}\n",$2); $$ = strdup
 		| /*epsilon*/
 		;
 
-STMT1	: STMT {sprintf(s,"%s",$1); $$ = strdup(s);}
-		| STMT1 STMT {sprintf(s,"%s\n%s",$1,$2); $$ = strdup(s);}
+STMT1	: STMT 			{sprintf(s,"%s",$1); $$ = strdup(s);}
+		| STMT1 STMT 	{sprintf(s,"%s\n%s",$1,$2); $$ = strdup(s);}
 		;
 
 STMT 	: STMT_DECLARE  {sprintf(s,"%s",$1); $$ = strdup(s);}  //all types of statements
@@ -85,14 +85,14 @@ EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| CHARACTERE
 		;
 
-STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT {printf("%s %s Then\n %s \nEnd If",$1,$3,$5);}
+STMT_IF : IF '(' EXP ')' IF_BODY ELSESTMT {sprintf(s,"%s %s Then\n %s \nEnd If",$1,$3,$5); $$ = strdup(s);}
 		;
 
-IF_BODY : STMTS
-		| STMT {sprintf($$,"%s",$1);}
+IF_BODY : STMTS		{sprintf(s,"%s",$1); $$ = strdup(s);}
+		| STMT 		{sprintf(s,"%s",$1); $$ = strdup(s);}
 		;
 
-ELSESTMT	: ELSE STMTS
+ELSESTMT	: ELSE STMTS	{sprintf(s,"\nElse %s",$2); $$ = strdup(s);}
 			| /*epsilon*/
 			;
 
