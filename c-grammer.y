@@ -97,7 +97,7 @@ ELSESTMT	: ELSE STMTS	{sprintf(s,"\nElse\n%s\n",$2); $$ = strdup(s);}
 			| /*epsilon*/	{sprintf(s,"\n"); $$ = strdup(s);}
 			;
 
-STMT_WHILE		: WHILE LEFTPARENTHESIS EXP RIGHTPARENTHESIS WHILE_BODY  {sprintf(s,"While %s Then\n%s\nEnd While",$3,$5); $$ = strdup(s);}
+STMT_WHILE		: WHILE LEFTPARENTHESIS EXP RIGHTPARENTHESIS WHILE_BODY  {sprintf(s,"While %s\n%s\nEnd While",$3,$5); $$ = strdup(s);}
 				;
 
 WHILE_BODY		: STMTS	{sprintf(s,"%s",$1); $$ = strdup(s);}
