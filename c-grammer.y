@@ -4,9 +4,12 @@
 #include <string.h>
 
 char* convertIntoVB(char* str,char* id);
+void yyerror(char *s);
+extern int yylineno;
 
 char *type;
 char s[1000000];
+
 %}
 
 %token <String> INT FLOAT CHAR VOID
@@ -26,7 +29,6 @@ char s[1000000];
 
 %nonassoc IFX IFX1
 %nonassoc ELSE
-
 %union {
 	char *String;
 }
@@ -173,8 +175,8 @@ int main(){
      yyparse();
 }
 
-yyerror(char* s){
-    fprintf(stdout,"%s\n",s);
+void yyerror(char* s){
+    fprintf(stderr,"%s at line: %d\n",s,yylineno);
 }
 
 int countSplits(char* str,char* d){

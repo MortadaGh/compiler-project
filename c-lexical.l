@@ -11,6 +11,7 @@ text        "\""([^\n\"\\]*(\\)*)*"\""
 charactere  '([^'\\\n]|\\.)'
 number      -?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
 id          {alpha}({alpha}|{digit})*
+%option yylineno
 
 %%
 
@@ -49,7 +50,8 @@ id          {alpha}({alpha}|{digit})*
 "%"  	            {yylval.String = strdup(yytext); return MOD;}
 \/\/.*              ;
 \/\*(.*\n)*.*\*\/   ;
-[ \t\n]     { /* skip blanks and tabs */ }  
+[ \t]     { /* skip blanks and tabs */ }
+\n          { }  
 .      { return yytext[0]; } 
 
 %%
