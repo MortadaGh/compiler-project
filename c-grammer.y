@@ -182,7 +182,8 @@ int main(){
 }
 
 void yyerror(char* s){
-    fprintf(stderr,"%s at line: %d\n",s,yylineno);
+	printf("%s at line: %d\n",s,yylineno-1);
+    fprintf(stderr,"%s at line: %d\n",s,yylineno-1);
 }
 
 int countSplits(char* str,char* d){

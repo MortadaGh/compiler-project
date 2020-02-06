@@ -50,8 +50,8 @@ id          {alpha}({alpha}|{digit})*
 "%"  	            {yylval.String = strdup(yytext); return MOD;}
 \/\/.*              ;
 \/\*(.*\n)*.*\*\/   ;
-[ \t]     { /* skip blanks and tabs */ }
-\n          { }  
-.      { return yytext[0]; } 
+[ \t]               { /* skip blanks and tabs */ }
+\n                  { }  
+.                   { return yytext[0]; } 
 
 %%
