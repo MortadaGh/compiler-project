@@ -60,7 +60,6 @@ STMT 	: STMT_DECLARE  {sprintf(s,"%s",$1); $$ = strdup(s);}  //all types of stat
 		| STMT_WHILE	{sprintf(s,"%s",$1); $$ = strdup(s);}
         | STMT_FOR		{sprintf(s,"%s",$1); $$ = strdup(s);}
 		| STMT_IO
-		| SEMICOLON
 		;		
 
 EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
@@ -137,7 +136,7 @@ FOR_BODY	: STMTS	{sprintf(s,"%s",$1); $$ = strdup(s);}
 
 STMT_IO		: PRINTF LEFTPARENTHESIS TEXT RIGHTPARENTHESIS SEMICOLON 			{sprintf(s,"Console.Write(%s)",$3); $$ = strdup(s);}
 			| PRINTF LEFTPARENTHESIS TEXT ',' ID RIGHTPARENTHESIS SEMICOLON		{char* val = strdup($3);char* vb = convertIntoVB(val,$5);sprintf(s,"Console.Write(%s)",vb); $$ = strdup(s);}
-			| SCANF LEFTPARENTHESIS TEXT ',' ID RIGHTPARENTHESIS SEMICOLON		{sprintf(s,"%s = Console.ReadLine()",$5); $$ = strdup(s);}
+			| SCANF LEFTPARENTHESIS TEXT ',' '&' ID RIGHTPARENTHESIS SEMICOLON		{sprintf(s,"%s = Console.ReadLine()",$6); $$ = strdup(s);}
 			;
 
 STMT_DECLARE 	: TYPE {type = strdup($1);} IDS SEMICOLON {sprintf(s, "Dim %s",$3);$$ = strdup(s);}
