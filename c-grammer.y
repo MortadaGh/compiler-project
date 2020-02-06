@@ -76,8 +76,7 @@ EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| EXP MUL EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| EXP DIV EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| EXP MOD EXP			{sprintf(s,"%s Mod %s",$1,$3); $$ = strdup(s);}
-		| ID PLUS PLUS 			{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
-		| ID MINUS MINUS		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
+		
 		| LEFTPARENTHESIS EXP RIGHTPARENTHESIS		{sprintf(s,"( %s )",$2); $$ = strdup(s);}
 		| '!' EXP				{sprintf(s,"Not %s",$2); $$ = strdup(s);}
 		| MINUS EXP				{sprintf(s,"- %s",$2); $$ = strdup(s);}
