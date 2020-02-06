@@ -47,7 +47,7 @@ pgmstart 	: TYPE ID LEFTPARENTHESIS RIGHTPARENTHESIS STMTS {printf("Sub %s()\n%s
 			;
 
 STMTS 	: LEFTBRACKET STMT1 RIGHTBRACKET {sprintf(s,"%s",$2); $$ = strdup(s);}
-		| /*epsilon*/
+		| LEFTBRACKET RIGHTBRACKET	{sprintf(s,""); $$ = strdup(s);}
 		;
 
 STMT1	: STMT 			{sprintf(s,"%s",$1); $$ = strdup(s);}
