@@ -106,8 +106,15 @@ WHILE_BODY		: STMTS	{sprintf(s,"%s",$1); $$ = strdup(s);}
 
 STMT_FOR 	: FOR LEFTPARENTHESIS STMT_ASSGN  ID LT EXP SEMICOLON ID PLUS PLUS RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s - 1\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
 			| FOR LEFTPARENTHESIS STMT_ASSGN  ID LE EXP SEMICOLON ID PLUS PLUS RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
+			
+			| FOR LEFTPARENTHESIS STMT_ASSGN  ID LT EXP SEMICOLON PLUS PLUS ID  RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s - 1\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
+			| FOR LEFTPARENTHESIS STMT_ASSGN  ID LE EXP SEMICOLON PLUS PLUS ID  RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
+			
 			| FOR LEFTPARENTHESIS STMT_ASSGN  ID GT EXP SEMICOLON ID MINUS MINUS RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s + 1\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
 			| FOR LEFTPARENTHESIS STMT_ASSGN  ID GE EXP SEMICOLON ID MINUS MINUS RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
+
+			| FOR LEFTPARENTHESIS STMT_ASSGN  ID GT EXP SEMICOLON MINUS MINUS ID  RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s + 1\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
+			| FOR LEFTPARENTHESIS STMT_ASSGN  ID GE EXP SEMICOLON MINUS MINUS ID  RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s\n%s\nNext\n",$3,$6,$12); $$ = strdup(s);}
 
 
 			| FOR LEFTPARENTHESIS STMT_ASSGN  ID LT EXP SEMICOLON ID PLUS ASGN NUM RIGHTPARENTHESIS FOR_BODY {sprintf(s,"For %s To %s - 1 Step %s\n%s\nNext",$3,$6,$11,$13); $$ = strdup(s);}
