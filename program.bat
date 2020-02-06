@@ -1,1 +1,1 @@
-program.exe < input.txt > output.txt
+program.exe < input.c > output.vb

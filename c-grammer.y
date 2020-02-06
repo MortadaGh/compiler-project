@@ -80,7 +80,8 @@ EXP 	: EXP LT EXP			{sprintf(s,"%s %s %s",$1,$2,$3); $$ = strdup(s);}
 		| ID MINUS MINUS		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
 		| LEFTPARENTHESIS EXP RIGHTPARENTHESIS		{sprintf(s,"( %s )",$2); $$ = strdup(s);}
 		| '!' EXP				{sprintf(s,"Not %s",$2); $$ = strdup(s);}
-		| ID
+		| MINUS EXP				{sprintf(s,"- %s",$2); $$ = strdup(s);}
+		| ID					
 		| NUM
 		| TEXT
 		| CHARACTERE			{sprintf(s,"%s",$1); $$ = strdup(s);}
@@ -154,7 +155,7 @@ ID_INIT		:	ID				{sprintf($$,"%s as %s",$1,type);}
 
 
 
-STMT_ASSGN	: ID ASGN EXP SEMICOLON			{sprintf(s,"%s = %s",$1,$3); $$ = strdup(s);}
+STMT_ASSGN	: ID ASGN EXP  SEMICOLON		{sprintf(s,"%s = %s",$1,$3); $$ = strdup(s);}
 			| ID PLUS PLUS SEMICOLON		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
 			| ID MINUS MINUS SEMICOLON		{sprintf(s,"%s %s= 1",$1,$2); $$ = strdup(s);}
 			| ID PLUS ASGN EXP SEMICOLON	{sprintf(s,"%s %s= %s",$1,$2,$4); $$ = strdup(s);}
